@@ -1,0 +1,56 @@
+{
+  "name": "metro-config-transformers",
+  "version": "1.0.0",
+  "description": "Create a Metro config transformer that works in all possible cases - handles objects, functions, promises, and any combination with full type safety",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "bun run build:cjs && bun run build:esm && bun run build:types",
+    "build:cjs": "bun build --target=node --format=cjs --outdir=dist/cjs src/index.ts",
+    "build:esm": "bun build --target=node --format=esm --outdir=dist/esm src/index.ts",
+    "build:types": "bunx tsc --emitDeclarationOnly",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
+    "lint": "bunx eslint src --ext .ts",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "keywords": [
+    "metro",
+    "react-native",
+    "config",
+    "transformer",
+    "composition",
+    "bundler"
+  ],
+  "author": "Szymon Chmal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/v3ron/metro-config-transformers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/v3ron/metro-config-transformers/issues"
+  },
+  "homepage": "https://github.com/v3ron/metro-config-transformers#readme",
+  "peerDependencies": {
+    "metro-config": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.5",
+    "metro-config": "^0.83.3",
+    "typescript": "^5.0.0"
+  }
+}
