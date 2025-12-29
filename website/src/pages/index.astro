@@ -1,0 +1,373 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Code } from 'astro:components';
+import MetroBackground from '../components/MetroBackground.astro';
+import MetroLogo from '../components/MetroLogo.astro';
+
+const codeInstall = `npm install metro-config-transformers`;
+
+const codeStandard = `import { createMetroConfigTransformer } from 'metro-config-transformers';
+
+// 1. Library authors: Export a standard transformer
+export const withMyPlugin = createMetroConfigTransformer({
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: { inlineRequires: true },
+    }),
+  },
+});`;
+
+const codeUser = `// 2. App developers: Compose without fear
+const { composeMetroConfigTransformers } = require('metro-config-transformers');
+const { withNativeWind } = require('nativewind/metro');
+const { withReanimated } = require('react-native-reanimated/metro-config');
+
+module.exports = composeMetroConfigTransformers([
+  withNativeWind,
+  withReanimated,
+  [withMyPlugin, { option: 'value' }]
+]);`;
+---
+
+<Layout title="Metro Config Transformers | A shared configuration standard">
+	<div class="relative w-full overflow-hidden min-h-screen bg-[#030303]">
+		
+		<!-- Metro map background -->
+		<MetroBackground />
+
+		<!-- Top glow -->
+		<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-white/5 to-transparent blur-[80px] pointer-events-none z-0"></div>
+
+		<nav class="relative z-50 w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+			<div class="flex items-center gap-3 font-semibold text-lg tracking-tight text-white">
+				<span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">Metro Config Transformers</span>
+			</div>
+			
+			<!-- Desktop Menu -->
+			<div class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+				<a href="#standard" class="hover:text-white transition-colors">The standard</a>
+				<a href="#initiative" class="hover:text-white transition-colors">Initiative</a>
+				<a href="https://www.npmjs.com/package/metro-config-transformers" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">NPM</a>
+				<a href="https://github.com/V3RON/metro-config-transformers" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-white hover:text-zinc-200 transition-colors">
+					<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+					GitHub
+				</a>
+			</div>
+
+			<!-- Mobile Menu Button -->
+			<button id="mobile-menu-btn" class="md:hidden text-zinc-400 hover:text-white transition-colors focus:outline-none" aria-label="Toggle menu">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+				</svg>
+			</button>
+		</nav>
+
+		<!-- Mobile Menu Overlay -->
+		<div id="mobile-menu" class="fixed inset-0 z-[100] bg-[#030303] transform translate-x-full transition-transform duration-300 md:hidden flex flex-col justify-center items-center gap-8">
+			<button id="close-menu-btn" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors focus:outline-none" aria-label="Close menu">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</button>
+			<a href="#standard" class="mobile-link text-2xl font-medium text-zinc-300 hover:text-white transition-colors">The standard</a>
+			<a href="#initiative" class="mobile-link text-2xl font-medium text-zinc-300 hover:text-white transition-colors">Initiative</a>
+			<a href="https://www.npmjs.com/package/metro-config-transformers" target="_blank" rel="noopener noreferrer" class="mobile-link text-2xl font-medium text-zinc-300 hover:text-white transition-colors">NPM</a>
+			<a href="https://github.com/V3RON/metro-config-transformers" target="_blank" rel="noopener noreferrer" class="mobile-link text-2xl font-medium text-zinc-300 hover:text-white transition-colors flex items-center gap-3">
+				GitHub
+			</a>
+		</div>
+
+		<script>
+			const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+			const closeMenuBtn = document.getElementById('close-menu-btn');
+			const mobileMenu = document.getElementById('mobile-menu');
+			const mobileLinks = document.querySelectorAll('.mobile-link');
+
+			function toggleMenu() {
+				mobileMenu?.classList.toggle('translate-x-full');
+				document.body.classList.toggle('overflow-hidden');
+			}
+
+			mobileMenuBtn?.addEventListener('click', toggleMenu);
+			closeMenuBtn?.addEventListener('click', toggleMenu);
+
+			mobileLinks.forEach(link => {
+				link.addEventListener('click', () => {
+					if (!mobileMenu?.classList.contains('translate-x-full')) {
+						toggleMenu();
+					}
+				});
+			});
+		</script>
+
+		<main class="relative z-10 flex flex-col items-center w-full">
+			
+			<!-- Hero -->
+			<section class="w-full max-w-5xl px-6 pt-32 pb-32 text-center flex flex-col items-center relative">
+				<!-- Hero specific background glow -->
+				<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+				<div class="mb-12 animate-fade-in w-32 h-32 md:w-40 md:h-40">
+					<MetroLogo />
+				</div>
+
+				<h1 class="text-6xl md:text-8xl font-bold tracking-tight text-white mb-8 animate-fade-in [animation-delay:100ms] leading-[1] drop-shadow-2xl">
+					Unify your <br />
+					<span class="text-transparent bg-clip-text bg-gradient-to-b from-zinc-200 to-zinc-500">Metro config.</span>
+				</h1>
+
+				<p class="text-lg md:text-xl text-zinc-400 max-w-2xl mb-12 leading-relaxed animate-fade-in [animation-delay:200ms] font-light">
+					A shared standard for composable React Native configuration. <br class="hidden md:block"/>
+					Ensure compatibility between different libraries and plugins.
+				</p>
+
+				<div class="flex flex-col sm:flex-row gap-5 items-center animate-fade-in [animation-delay:300ms]">
+					<div class="relative group">
+						<div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+						<a href="#initiative" class="relative px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-zinc-100 transition-all flex items-center gap-2 shadow-xl shadow-emerald-900/20">
+							Join the initiative
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+								<path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+							</svg>
+						</a>
+					</div>
+					<div class="relative group">
+						<button class="relative px-8 py-4 bg-black border border-zinc-800 text-zinc-300 rounded-full font-medium hover:text-white hover:border-zinc-500 hover:bg-zinc-900 transition-all font-mono text-sm">
+							npm i metro-config-transformers
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Problem grid (bento style) -->
+			<section class="w-full max-w-6xl px-6 py-24">
+				<div class="text-center mb-20">
+					<h2 class="text-3xl md:text-4xl font-bold mb-6 text-white tracking-tight">Why do we need a standard?</h2>
+					<p class="text-lg text-zinc-400 max-w-2xl mx-auto">The React Native ecosystem has various approaches to configuration. Standardizing how we modify the config enables better tool interoperability.</p>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+					<!-- Large card: The core problem -->
+					<div class="md:col-span-2 p-10 rounded-3xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/50 transition-all duration-500 relative overflow-hidden group">
+						<div class="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-all duration-500 transform group-hover:scale-110">
+							<svg class="w-64 h-64 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+						</div>
+						<div class="relative z-10">
+							<h3 class="text-2xl font-bold text-white mb-4">The wrapping problem</h3>
+							<p class="text-zinc-400 mb-8 max-w-md text-base leading-relaxed">
+								Libraries often attempt to wrap the configuration object in different ways. 
+								Without a standard, this can lead to conflicts where settings are overwritten.
+							</p>
+							<div class="font-mono text-xs md:text-sm text-zinc-500 bg-black/60 p-5 rounded-xl border border-red-900/30 relative overflow-hidden backdrop-blur-sm">
+								<div class="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
+								<span class="text-red-400 font-bold">Error:</span> Cannot read property 'transform' of undefined<br/>
+								&nbsp;&nbsp;at withNativeWind (node_modules/...)<br/>
+								&nbsp;&nbsp;at withReanimated (node_modules/...)
+							</div>
+						</div>
+					</div>
+
+					<!-- Tall card: Order dependency -->
+					<div class="md:row-span-2 p-10 rounded-3xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/50 transition-all duration-500 flex flex-col justify-between group">
+						<div>
+							<div class="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 border border-zinc-700">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+								</svg>
+							</div>
+							<h3 class="text-2xl font-bold text-white mb-4">Order matters</h3>
+							<p class="text-zinc-400 text-base leading-relaxed">
+								Changing the order of plugins often breaks the build because one plugin might expect the output of another in a specific format.
+							</p>
+						</div>
+						<div class="mt-12 relative h-40 w-full bg-black/40 rounded-xl border border-zinc-800/50 overflow-hidden flex items-center justify-center">
+							<div class="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+							<div class="flex flex-col gap-2 font-mono text-xs z-10 w-full px-10">
+								<div class="flex items-center gap-3 opacity-50">
+									<div class="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-500 border border-zinc-700">1</div>
+									<div class="px-3 py-1.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700 w-full">withNativeWind</div>
+								</div>
+								<div class="flex items-center gap-3">
+									<div class="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-500 border border-zinc-700">2</div>
+									<div class="px-3 py-1.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 w-full">withReanimated</div>
+								</div>
+								<div class="flex items-center gap-3 mt-1">
+									<div class="w-5 h-5 flex items-center justify-center">
+										<svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+									</div>
+									<span class="text-red-400 font-bold bg-red-500/10 px-2 py-0.5 rounded">Build Failed</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card: Inconsistent types -->
+					<div class="p-10 rounded-3xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/50 transition-all duration-500">
+						<h3 class="text-xl font-bold text-white mb-4">Inconsistent types</h3>
+						<p class="text-zinc-400 text-sm leading-relaxed mb-6">
+							Transformers may return objects, functions, or promises. A standard interface ensures predictability.
+						</p>
+						<div class="space-y-3">
+							<div class="flex items-center justify-between p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 group/item hover:border-zinc-700 transition-colors">
+								<code class="text-xs text-blue-400 font-mono">return {'{...}'}</code>
+								<span class="text-[10px] uppercase tracking-wider text-zinc-600 font-bold group-hover/item:text-zinc-500">Object</span>
+							</div>
+							<div class="flex items-center justify-between p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 group/item hover:border-zinc-700 transition-colors">
+								<code class="text-xs text-purple-400 font-mono">return (cfg) ={'>'} ...</code>
+								<span class="text-[10px] uppercase tracking-wider text-zinc-600 font-bold group-hover/item:text-zinc-500">Function</span>
+							</div>
+							<div class="flex items-center justify-between p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 group/item hover:border-zinc-700 transition-colors">
+								<code class="text-xs text-amber-400 font-mono">async (cfg) ={'>'} ...</code>
+								<span class="text-[10px] uppercase tracking-wider text-zinc-600 font-bold group-hover/item:text-zinc-500">Promise</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card: The solution -->
+					<div class="p-10 rounded-3xl bg-gradient-to-br from-zinc-900 to-black border border-zinc-800 flex flex-col justify-center relative overflow-hidden group">
+						<div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+						<div class="relative z-10">
+							<h3 class="text-xl font-bold text-white mb-4">The solution</h3>
+							<p class="text-zinc-400 text-sm mb-6">
+								A single, standardized primitive that handles merging, async resolution, and type safety for you.
+							</p>
+							<div class="flex flex-wrap gap-2">
+								<span class="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-400">Order independent</span>
+								<span class="px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400">Async safe</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Code/standard section -->
+			<section id="standard" class="w-full border-y border-white/5 bg-zinc-900/20 backdrop-blur-sm relative">
+				<div class="max-w-7xl mx-auto px-6 py-32">
+					<div class="flex flex-col lg:flex-row gap-20">
+						<div class="flex-1 lg:max-w-md">
+							<h2 class="text-4xl font-bold mb-8 text-white">The new standard</h2>
+							<p class="text-lg text-zinc-400 mb-10 leading-relaxed">
+								I propose a unified interface for Metro configuration. 
+								It abstracts the complexity to ensure interoperability.
+							</p>
+							
+							<div class="space-y-8">
+								<div class="flex gap-5 group">
+									<div class="flex-none w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white font-bold text-sm group-hover:bg-white group-hover:text-black transition-all shadow-lg">1</div>
+									<div>
+										<h4 class="text-lg font-bold text-white mb-2">For library authors</h4>
+										<p class="text-sm text-zinc-400 leading-relaxed">Export your config using <code>createMetroConfigTransformer</code>. It ensures your plugin plays nicely with others.</p>
+									</div>
+								</div>
+								<div class="flex gap-5 group">
+									<div class="flex-none w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white font-bold text-sm group-hover:bg-white group-hover:text-black transition-all shadow-lg">2</div>
+									<div>
+										<h4 class="text-lg font-bold text-white mb-2">For app developers</h4>
+										<p class="text-sm text-zinc-400 leading-relaxed">Use <code>composeMetroConfigTransformers</code> to combine plugins in a predictable way.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="flex-1 min-w-0">
+							<!-- Code window -->
+							<div class="rounded-2xl overflow-hidden bg-[#0d1117] border border-zinc-800 shadow-2xl relative group">
+								<div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+								<div class="flex items-center px-4 py-3 bg-[#161b22] border-b border-zinc-800 gap-2">
+									<div class="flex gap-2">
+										<div class="w-3 h-3 rounded-full bg-[#282e37]"></div>
+										<div class="w-3 h-3 rounded-full bg-[#282e37]"></div>
+										<div class="w-3 h-3 rounded-full bg-[#282e37]"></div>
+									</div>
+									<span class="ml-4 text-xs text-zinc-500 font-mono">metro.config.js</span>
+								</div>
+								
+								<!-- Library author code -->
+								<div class="border-b border-zinc-800/50">
+									<div class="px-6 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 bg-zinc-900/50 border-b border-zinc-800/50">Library author</div>
+									<div class="p-6 text-sm [&>pre]:!bg-transparent [&>pre]:!p-0 overflow-x-auto">
+										<Code code={codeStandard} lang="typescript" theme="github-dark" />
+									</div>
+								</div>
+
+								<!-- App developer code -->
+								<div class="bg-zinc-900/20">
+									<div class="px-6 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 bg-zinc-900/50 border-y border-zinc-800/50">App developer</div>
+									<div class="p-6 text-sm [&>pre]:!bg-transparent [&>pre]:!p-0 overflow-x-auto">
+										<Code code={codeUser} lang="javascript" theme="github-dark" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Call to initiative -->
+			<section id="initiative" class="w-full max-w-4xl px-6 py-40 text-center relative">
+				<!-- Background glow for CTA -->
+				<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-b from-emerald-500/5 to-transparent blur-[100px] pointer-events-none -z-10"></div>
+				
+				<h2 class="text-5xl md:text-6xl font-bold mb-8 text-white tracking-tight">Join the initiative</h2>
+				<p class="text-xl text-zinc-400 mb-16 max-w-2xl mx-auto font-light">
+					I invite React Native library authors to adopt this standard. 
+					Let's improve the configuration experience for everyone.
+				</p>
+				
+				<div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+					<a href="https://github.com/V3RON/metro-config-transformers" class="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-zinc-200 transition-all flex items-center justify-center gap-3 shadow-xl">
+						<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+						Star on GitHub
+					</a>
+					<a href="https://github.com/V3RON/metro-config-transformers/issues" class="w-full sm:w-auto px-8 py-4 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-full font-medium hover:border-zinc-600 hover:text-white transition-all text-center">
+						Submit a proposal
+					</a>
+				</div>
+			</section>
+
+		</main>
+
+		<footer class="w-full border-t border-white/5 py-12 px-6 bg-black">
+			<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+				<div class="ml-auto flex gap-8 text-sm">
+					<a href="https://github.com/V3RON/metro-config-transformers" class="text-zinc-500 hover:text-white transition-colors">GitHub</a>
+					<a href="https://www.npmjs.com/package/metro-config-transformers" class="text-zinc-500 hover:text-white transition-colors">NPM</a>
+					<a href="https://facebook.github.io/metro/" class="text-zinc-500 hover:text-white transition-colors">Metro</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</Layout>
+
+<style>
+	@keyframes fade-in {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	.animate-fade-in {
+		animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		opacity: 0;
+	}
+
+	@keyframes beam-h {
+		0% { transform: translateX(-100%); opacity: 0; }
+		10% { opacity: 1; }
+		90% { opacity: 1; }
+		100% { transform: translateX(100%); opacity: 0; }
+	}
+	
+	@keyframes beam-v {
+		0% { transform: translateY(-100%); opacity: 0; }
+		10% { opacity: 1; }
+		90% { opacity: 1; }
+		100% { transform: translateY(100%); opacity: 0; }
+	}
+
+	.animate-beam-h {
+		animation: beam-h 8s linear infinite;
+	}
+
+	.animate-beam-v {
+		animation: beam-v 7s linear infinite;
+	}
+</style>
